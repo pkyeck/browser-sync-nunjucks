@@ -28,12 +28,12 @@ module.exports = function(opt) {
     var pathname = path.join(baseDir, url.parse(file).pathname);
 
     if (path.extname(pathname) === ext && fs.existsSync(pathname)) {
-      var contents = fs.readFileSync(pathname).toString();
+      // var contents = fs.readFileSync(pathname).toString();
 
       config.query = url.parse(req.url, true).query;
       config.filename = pathname;
 
-      nunjucks.renderString(contents, config, function(err, result) {
+      nunjucks.render(pathname, config, function(err, result) {
         if (err) {
           console.log(err, err.stack);
           res.writeHead(500);
