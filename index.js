@@ -33,15 +33,18 @@ module.exports = function(opt) {
       config.query = url.parse(req.url, true).query;
       config.filename = pathname;
 
-      contents = nunjucks.render(contents, config);
+      nunjucks.render(contents, config, function(err, result) {
+        if (err) {
+          console.log(err, err.stack);
+        }
 
-      if (opt.browserSync) {
-        contents = contents.replace(/<\/head>/, '<script async src="//' + req.headers.host + bsURL + ' "></script></head>');
-      }
+        if (opt.browserSync) {
+          result = result.replace(/<\/head>/, '<script async src="//' + req.headers.host + bsURL + ' "></script></head>');
+        }
 
-      res.write(contents);
-
-      res.end();
+        res.write(result);
+        res.end();
+      });
     } else {
       next();
     }
