@@ -36,6 +36,9 @@ module.exports = function(opt) {
       nunjucks.render(contents, config, function(err, result) {
         if (err) {
           console.log(err, err.stack);
+          res.writeHead(500);
+          res.end();
+          return;
         }
 
         if (opt.browserSync) {
