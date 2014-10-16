@@ -33,7 +33,7 @@ module.exports = function(opt) {
       config.query = url.parse(req.url, true).query;
       config.filename = pathname;
 
-      nunjucks.render(contents, config, function(err, result) {
+      nunjucks.renderString(contents, config, function(err, result) {
         if (err) {
           console.log(err, err.stack);
           res.writeHead(500);
