@@ -6,14 +6,12 @@ var fs = require('fs');
 var nunjucks = require('nunjucks');
 
 
-function MyLoader(opts) {
+function CustomFileLoader(opts) {
   this.modulesPath = opts.modules;
   this.ext = opts.ext;
 }
 
-MyLoader.prototype.getSource = function(name) {
-  console.log('MyLoader getSource()', name);
-
+CustomFileLoader.prototype.getSource = function(name) {
   var splits = name.split('/');
 
   if (splits[0] === '@') {
@@ -42,6 +40,8 @@ module.exports = function(opt) {
   var bsURL = '';
   var modules = opt.modulesDir || '';
 
+  // TODO allow custom filters via options
+  // TODO check parameters for filters
   var filters = {
     filter: function(input, condition) {
       return input.filter(function(item) {
@@ -76,7 +76,7 @@ module.exports = function(opt) {
       context.query = url.parse(req.url, true).query;
       context.filename = pathname;
 
-      var env = new nunjucks.Environment(new MyLoader({
+      var env = new nunjucks.Environment(new CustomFileLoader({
         modules: modules,
         ext: ext
       }), {
@@ -90,11 +90,9 @@ module.exports = function(opt) {
       });
 
       for (var filterName in filters) {
-        console.log(filterName);
         env.addFilter(filterName, filters[filterName]);
       }
 
-      console.log('nunjucks render:', pathname);
       env.render(pathname, context, function(err, result) {
         if (err) {
           console.log(err);
