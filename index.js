@@ -7,7 +7,7 @@ var nunjucks = require('nunjucks');
 
 
 function CustomFileLoader(opts) {
-  this.baseDir = opts.baseDir;
+  this.baseDir = opts.baseDir || '';
   this.modulesPath = opts.modules;
   this.ext = opts.ext;
 }
