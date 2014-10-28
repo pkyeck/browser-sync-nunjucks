@@ -54,6 +54,9 @@ module.exports = function(opt) {
         return eval(condition);
       });
     },
+    max: function(input, other) {
+      return Math.max(input, other);
+    },
     min: function(input, other) {
       return Math.min(input, other);
     },
