@@ -116,6 +116,7 @@ module.exports = function(opt) {
           result = result.replace(/<\/head>/, '<script async src="//' + req.headers.host + bsURL + ' "></script></head>');
         }
 
+        res.setHeader('Content-Type', 'text/html');
         res.write(result);
         res.end();
       });
