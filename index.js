@@ -4,6 +4,7 @@ var url = require('url');
 var path = require('path');
 var fs = require('fs');
 var nunjucks = require('nunjucks');
+var _ = require('lodash');
 
 
 function CustomFileLoader(opts) {
@@ -67,6 +68,9 @@ module.exports = function(opt) {
       return parseInt(input, 10) || or;
     }
   };
+
+  // allow custom nunjucks filter
+  _.extend(filters, opt.filters);
 
   if (opt.browserSync) {
     if (opt.browserSync === true) {
