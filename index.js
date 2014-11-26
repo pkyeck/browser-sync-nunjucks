@@ -47,30 +47,8 @@ module.exports = function(opt) {
   var bsURL = '';
   var modules = opt.modulesDir || '';
 
-  // TODO allow custom filters via options
-  // TODO check parameters for filters
-  var filters = {
-    filter: function(input, condition) {
-      return input.filter(function(item) {
-        return eval(condition);
-      });
-    },
-    max: function(input, other) {
-      return Math.max(input, other);
-    },
-    min: function(input, other) {
-      return Math.min(input, other);
-    },
-    range: function(input, start, end) {
-      return input.slice(start, end);
-    },
-    parseIntOr: function(input, or) {
-      return parseInt(input, 10) || or;
-    }
-  };
-
   // allow custom nunjucks filter
-  _.extend(filters, opt.filters);
+  var filters = opt.filters || {};
 
   if (opt.browserSync) {
     if (opt.browserSync === true) {
