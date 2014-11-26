@@ -46,9 +46,12 @@ module.exports = function(opt) {
   var baseDir = opt.baseDir || __dirname;
   var bsURL = '';
   var modules = opt.modulesDir || '';
-
+  
   // allow custom nunjucks filter
   var filters = opt.filters || {};
+
+  // using browser-sync can be disabled w/ UA regex
+  var excludeUA = opt.excludeUA instanceof RegExp ? opt.excludeUA : undefined;
 
   if (opt.browserSync) {
     if (opt.browserSync === true) {
@@ -62,6 +65,7 @@ module.exports = function(opt) {
   return function(req, res, next) {
     var file = req.url === '/' ? ('/index' + ext) : req.url;
     var pathname = path.join(baseDir, url.parse(file).pathname);
+    var ua = req.headers['user-agent'];
 
     if (path.extname(pathname) === ext && fs.existsSync(pathname)) {
       context.query = url.parse(req.url, true).query;
@@ -92,6 +96,12 @@ module.exports = function(opt) {
           res.writeHead(500);
           res.end();
           return;
+        }
+
+        if (typeof excludeUA !== 'undefined') {
+          if (excludeUA.test(ua)) {
+            opt.browserSync = false;           
+          }
         }
 
         if (opt.browserSync) {
