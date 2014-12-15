@@ -70,6 +70,7 @@ module.exports = function(opt) {
     if (path.extname(pathname) === ext && fs.existsSync(pathname)) {
       context.query = url.parse(req.url, true).query;
       context.filename = pathname;
+      context.ajax = req.headers['x-requested-with'] === 'XMLHttpRequest';
 
       var env = new nunjucks.Environment(new CustomFileLoader({
         baseDir: baseDir,
