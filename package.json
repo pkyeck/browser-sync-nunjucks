@@ -1,6 +1,6 @@
 {
   "name": "browser-sync-nunjucks",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "nunjucks middleware for browsersync",
   "main": "index.js",
   "scripts": {
