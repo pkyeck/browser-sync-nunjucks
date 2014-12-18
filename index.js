@@ -11,6 +11,11 @@ function CustomFileLoader(opts) {
   this.baseDir = opts.baseDir || '';
   this.modulesPath = opts.modules;
   this.ext = opts.ext;
+  this.currentPath = opts.currentPath;
+  if (path.extname(this.currentPath) !== '') {
+    var pos = this.currentPath.lastIndexOf('/');
+    this.currentPath = this.currentPath.substring(0, pos);
+  }
 }
 
 CustomFileLoader.prototype.getSource = function(name) {
@@ -19,6 +24,11 @@ CustomFileLoader.prototype.getSource = function(name) {
   if (splits[0] === '@') {
     splits.shift();
     name = path.join(this.baseDir, this.modulesPath, splits.join('/') + this.ext);
+  }
+
+  if (splits[0] === '.') {
+    splits.shift();
+    name = path.join(this.baseDir, this.currentPath, splits.join('/') + this.ext);
   }
 
   var bd = this.baseDir.split('./').join('');
@@ -44,6 +54,7 @@ module.exports = function(opt) {
   var ext = opt.ext || '.html';
   var context = opt.context || {};
   var baseDir = opt.baseDir || __dirname;
+  var currentPath = opt.currentPath || baseDir;
   var bsURL = '';
   var modules = opt.modulesDir || '';
   
@@ -75,7 +86,8 @@ module.exports = function(opt) {
       var env = new nunjucks.Environment(new CustomFileLoader({
         baseDir: baseDir,
         modules: modules,
-        ext: ext
+        ext: ext,
+        currentPath: req.url
       }), {
         watch: false,
         tags: {
