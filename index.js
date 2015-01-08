@@ -117,7 +117,7 @@ module.exports = function(opt) {
           }
         }
 
-        if (opt.browserSync) {
+        if (opt.browserSync && opt.browserSync < '1.8.3') {
           result = result.replace(/<\/head>/, '<script async src="//' + req.headers.host + bsURL + ' "></script></head>');
         }
 
