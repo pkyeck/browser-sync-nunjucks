@@ -57,21 +57,9 @@ module.exports = function(opt) {
   var currentPath = opt.currentPath || baseDir;
   var bsURL = '';
   var modules = opt.modulesDir || '';
-  
+
   // allow custom nunjucks filter
-  var filters = opt.filters || {};
-
-  // using browser-sync can be disabled w/ UA regex
-  var excludeUA = opt.excludeUA instanceof RegExp ? opt.excludeUA : undefined;
-
-  if (opt.browserSync) {
-    if (opt.browserSync === true) {
-      opt.browserSync = '1.4.0';
-    }
-
-    bsURL = opt.browserSync >= '1.4.0' ? '/browser-sync/browser-sync-client.' : '/browser-sync-client.';
-    bsURL += opt.browserSync + '.js';
-  }
+  var filters = opt.filters ||  {};
 
   return function(req, res, next) {
     var file = req.url === '/' ? ('/index' + ext) : req.url;
@@ -109,16 +97,6 @@ module.exports = function(opt) {
           res.writeHead(500);
           res.end();
           return;
-        }
-
-        if (typeof excludeUA !== 'undefined') {
-          if (excludeUA.test(ua)) {
-            opt.browserSync = false;           
-          }
-        }
-
-        if (opt.browserSync && opt.browserSync < '1.8.3') {
-          result = result.replace(/<\/head>/, '<script async src="//' + req.headers.host + bsURL + ' "></script></head>');
         }
 
         res.setHeader('Content-Type', 'text/html');
