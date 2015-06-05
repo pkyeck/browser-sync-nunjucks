@@ -6,6 +6,12 @@ var fs = require('fs');
 var nunjucks = require('nunjucks');
 var _ = require('lodash');
 
+var debug = false;
+var log = function(msg) {
+  if (debug) {
+    console.log(msg);
+  }
+};
 
 function CustomFileLoader(opts) {
   this.baseDir = opts.baseDir || '';
@@ -20,6 +26,7 @@ function CustomFileLoader(opts) {
 
 CustomFileLoader.prototype.getSource = function(name) {
   var splits = name.split('/');
+  var original = name;
 
   if (splits[0] === '@') {
     splits.shift();
@@ -36,9 +43,12 @@ CustomFileLoader.prototype.getSource = function(name) {
     name = path.resolve(this.baseDir + '/' + name);
   }
 
-  if (name.lastIndexOf('.') < 0) {
+  var ext = path.extname(name);
+  if (ext === '') {
     name += this.ext;
   }
+
+  log('get source', original, name);
 
   return {
     src: fs.readFileSync(name).toString(),
@@ -50,6 +60,7 @@ CustomFileLoader.prototype.getSource = function(name) {
 
 module.exports = function(opt) {
   opt = opt || {};
+  debug = opt.debug || false;
 
   var ext = opt.ext || '.html';
   var context = opt.context || {};
@@ -57,9 +68,9 @@ module.exports = function(opt) {
   var currentPath = opt.currentPath || baseDir;
   var bsURL = '';
   var modules = opt.modulesDir || '';
-
+  
   // allow custom nunjucks filter
-  var filters = opt.filters ||  {};
+  var filters = opt.filters || {};
 
   return function(req, res, next) {
     var file = req.url === '/' ? ('/index' + ext) : req.url;
@@ -92,8 +103,8 @@ module.exports = function(opt) {
 
       env.render(pathname, context, function(err, result) {
         if (err) {
-          console.log(err);
-          console.log(err.stack);
+          log(err);
+          log(err.stack);
           res.writeHead(500);
           res.end();
           return;
