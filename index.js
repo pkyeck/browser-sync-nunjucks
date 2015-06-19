@@ -7,9 +7,9 @@ var nunjucks = require('nunjucks');
 var _ = require('lodash');
 
 var debug = false;
-var log = function(msg) {
+var log = function() {
   if (debug) {
-    console.log(msg);
+    console.log.apply(console, arguments);
   }
 };
 
