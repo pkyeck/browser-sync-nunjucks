@@ -30,12 +30,14 @@ CustomFileLoader.prototype.getSource = function(name) {
 
   if (splits[0] === '@') {
     splits.shift();
-    name = path.join(this.baseDir, this.modulesPath, splits.join('/') + this.ext);
+    name = splits.join('/') + this.ext;
+    name = path.join(this.baseDir, this.modulesPath, name);
   }
 
   if (splits[0] === '.') {
     splits.shift();
-    name = path.join(this.baseDir, this.currentPath, splits.join('/') + this.ext);
+    name = splits.join('/') + this.ext;
+    name = path.join(this.baseDir, this.currentPath, name);
   }
 
   var bd = this.baseDir.split('./').join('');
@@ -57,7 +59,8 @@ CustomFileLoader.prototype.getSource = function(name) {
   };
 };
 
-
+//
+//
 module.exports = function(opt) {
   opt = opt || {};
   debug = opt.debug || false;
@@ -68,7 +71,7 @@ module.exports = function(opt) {
   var currentPath = opt.currentPath || baseDir;
   var bsURL = '';
   var modules = opt.modulesDir || '';
-  
+
   // allow custom nunjucks filter
   var filters = opt.filters || {};
 
