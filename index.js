@@ -76,7 +76,7 @@ module.exports = function(opt) {
   var filters = opt.filters || {};
 
   return function(req, res, next) {
-    var file = req.url === '/' ? ('/index' + ext) : req.url;
+    var file = (req.url === '/' || req.url.indexOf('/?') === 0) ? ('/index' + ext) : req.url;
     var pathname = path.join(baseDir, url.parse(file).pathname);
     var ua = req.headers['user-agent'];
 
